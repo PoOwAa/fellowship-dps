@@ -1,6 +1,17 @@
 import Spell from "../Spell";
 
-export class Character {
+export type CharacterOptions = {
+  name: string;
+  baseHealth: number;
+  baseCrit: number;
+  stamina: number;
+  intellect: number;
+  crit: number;
+  expertise: number;
+  haste: number;
+};
+
+export abstract class Character {
   name: string;
   protected baseHealth: number;
   health: number;
@@ -29,32 +40,27 @@ export class Character {
   expertise: number;
   haste: number;
 
-  spells: Spell[];
+  spells: Spell<any>[];
 
-  constructor(
-    name: string,
-    baseHealth: number,
-    baseCrit: number,
-    stamina: number,
-    intellect: number,
-    crit: number,
-    expertise: number,
-    haste: number
-  ) {
-    this.name = name;
-    this.baseHealth = baseHealth;
-    this.baseCrit = baseCrit;
-    this.stamina = stamina;
-    this.health = this.baseHealth + stamina * 25;
-    this.intellect = intellect;
-    this.crit = this.baseCrit + crit * 0.21;
-    this.expertise = expertise;
-    this.haste = haste;
+  constructor(options: CharacterOptions) {
+    this.name = options.name;
+    this.baseHealth = options.baseHealth;
+    this.baseCrit = options.baseCrit;
+    this.stamina = options.stamina;
+    this.health = this.baseHealth + options.stamina * 25;
+    this.intellect = options.intellect;
+    this.crit = this.baseCrit + options.crit * 0.21;
+    this.expertise = options.expertise;
+    this.haste = options.haste;
     this.spells = [];
   }
 
+  getSpell(spellName: string): Spell<any> | undefined {
+    return this.spells.find((spell) => spell.name === spellName);
+  }
+
   castSpell(spellName: string): number {
-    const spell = this.spells.find((spell) => spell.name === spellName);
+    const spell = this.getSpell(spellName);
     if (!spell) return 0;
 
     return spell.cast(this);

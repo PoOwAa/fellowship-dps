@@ -1,35 +1,37 @@
 import { Character } from "./characters/Character";
 
-export default class Spell {
+export type SpellOptions<T extends Character> = {
+  name: string;
+  castTime: number;
+  cooldown: number;
+  effect?: (character: T, additionalData?: any) => void;
+  damageFormula: (character: T, additionalData?: any) => number;
+  castCondition?: (character: T) => boolean;
+  baseCrit?: number;
+};
+
+export default class Spell<T extends Character> {
   name: string;
   castTime: number;
   cooldown: number;
   cooldownRemaining: number;
-  effect: (character: Character, additionalData?: any) => void;
-  damageFormula: (character: Character, additionalData?: any) => number;
-  castCondition: (character: Character) => boolean;
+  effect: (character: T, additionalData?: any) => void;
+  damageFormula: (character: T, additionalData?: any) => number;
+  castCondition: (character: T) => boolean;
   baseCrit: number;
 
-  constructor(
-    name: string,
-    castTime: number,
-    cooldown: number,
-    effect: (character: Character, additionalData?: any) => void,
-    damageFormula: (character: Character, additionalData?: any) => number,
-    castCondition: (character: Character) => boolean,
-    baseCrit: number = 0
-  ) {
-    this.name = name;
-    this.castTime = castTime;
-    this.cooldown = cooldown;
+  constructor(options: SpellOptions<T>) {
+    this.name = options.name;
+    this.castTime = options.castTime;
+    this.cooldown = options.cooldown;
     this.cooldownRemaining = 0;
-    this.effect = effect;
-    this.damageFormula = damageFormula;
-    this.baseCrit = baseCrit;
-    this.castCondition = castCondition;
+    this.effect = options.effect || (() => {});
+    this.damageFormula = options.damageFormula;
+    this.baseCrit = options.baseCrit || 0;
+    this.castCondition = options.castCondition || (() => true);
   }
 
-  cast(character: Character, additionalData?: any): number {
+  cast(character: T, additionalData?: any): number {
     this.cooldownRemaining = this.cooldown;
 
     const isCrit =
@@ -49,7 +51,7 @@ export default class Spell {
     }
   }
 
-  canCast(character: Character): boolean {
+  canCast(character: T): boolean {
     return this.cooldownRemaining <= 0 && this.castCondition(character);
   }
 }
