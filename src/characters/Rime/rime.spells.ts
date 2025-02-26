@@ -18,6 +18,7 @@ export enum RimeSpellNames {
  */
 const animaSpike = new Spell<Rime>({
   name: RimeSpellNames.ANIMA_SPIKE,
+  type: "passive",
   castTime: 0,
   cooldown: 0,
   effect: () => {},
@@ -37,6 +38,7 @@ const animaSpike = new Spell<Rime>({
  */
 const frostBolt = new Spell<Rime>({
   name: RimeSpellNames.FROST_BOLT,
+  type: "active",
   castTime: 1.5,
   cooldown: 0,
   effect: (character) => {
@@ -57,6 +59,7 @@ const frostBolt = new Spell<Rime>({
  */
 const coldSnap = new Spell<Rime>({
   name: RimeSpellNames.COLD_SNAP,
+  type: "active",
   castTime: 0,
   cooldown: 8,
   effect: (character) => {
@@ -78,6 +81,7 @@ const coldSnap = new Spell<Rime>({
  */
 const glacialBlast = new Spell<Rime>({
   name: RimeSpellNames.GLACIAL_BLAST,
+  type: "active",
   castTime: 2,
   cooldown: 0,
   effect: (character) => {
@@ -100,15 +104,16 @@ const glacialBlast = new Spell<Rime>({
  */
 const freezingTorrent = new Spell<Rime>({
   name: RimeSpellNames.FREEZING_TORRENT,
+  type: "active",
   castTime: 2,
+  castingType: "channeled",
+  tickInterval: 0.33,
   cooldown: 10,
   effect: (character) => {
-    for (let i = 0; i < 6; i++) {
-      character.generateAnima(1);
-    }
-    console.log("Freezing Torrent fully channeled: 6 Anima generated");
+    character.generateAnima(1);
+    console.log("Freezing Torrent channeling: 1 Anima generated");
   },
-  damageFormula: (character) => character.intellect * 3.9,
+  damageFormula: (character) => character.intellect * 0.65,
 });
 
 /**
@@ -126,6 +131,7 @@ const freezingTorrent = new Spell<Rime>({
  */
 const burstingIce = new Spell<Rime>({
   name: RimeSpellNames.BURSTING_ICE,
+  type: "active",
   castTime: 2,
   cooldown: 15,
   effect: (character, additionalData) => {

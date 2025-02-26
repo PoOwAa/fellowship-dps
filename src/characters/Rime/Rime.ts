@@ -1,4 +1,4 @@
-import { Character } from "../Character";
+import Character from "../Character";
 import { RIME_SPELLS, RimeSpellNames } from "./rime.spells";
 
 export type RimeOptions = {

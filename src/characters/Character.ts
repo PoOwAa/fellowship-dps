@@ -11,7 +11,7 @@ export type CharacterOptions = {
   haste: number;
 };
 
-export abstract class Character {
+export default abstract class Character {
   name: string;
   protected baseHealth: number;
   health: number;
